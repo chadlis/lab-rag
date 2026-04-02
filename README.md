@@ -14,17 +14,17 @@ uv run python -m lab_rag "a film about space"
 
 ## Roadmap
 ### 0 - Setup
-- [x] Set up the project
+- [ ] Set up the project
 
-### 1 — Preprocessing
+### 1 — Basic keyword search
 - [ ] Implement text preprocessing
   - [ ] punctuation normalization
   - [ ] tokenization
   - [ ] stop word removal
+- [ ] implement basic keyword search
 
 ### 2 — TF-IDF
 - [ ] Build an inverted index
-- [ ] Add boolean search
 - [ ] Implement TF-IDF retrieval
   - [ ] term frequency
   - [ ] inverse document frequency
