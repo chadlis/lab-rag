@@ -14,7 +14,7 @@ uv run python -m lab_rag "a film about space"
 
 ## Roadmap
 ### 0 - Setup
-- [ ] Set up the project
+- [x] Set up the project
 
 ### 1 — Preprocessing
 - [ ] Implement text preprocessing

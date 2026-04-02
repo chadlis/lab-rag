@@ -1,7 +1,15 @@
 [project]
 name = "lab-rag"
 version = "0.1.0"
-description = "Add your description here"
+description = "Building a RAG pipeline from scratch"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.8",
+]
+
+[tool.ruff]
+line-length = 88
