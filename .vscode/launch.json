@@ -26,6 +26,19 @@
                 "CACHE_DIR": "${workspaceFolder}/cache",
                 "ASSETS_DIR": "${workspaceFolder}/assets"
             }
+        },
+        {
+            "name": "TFIDF: doc 424, term 'trapper'",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/keyword_search_cli.py",
+            "args": ["tfidf", "424", "trapper"],
+            "cwd": "${workspaceFolder}/cli",
+            "env": {
+                "DATA_DIR": "${workspaceFolder}/data",
+                "CACHE_DIR": "${workspaceFolder}/cache",
+                "ASSETS_DIR": "${workspaceFolder}/assets"
+            }
         }
     ]
 }
