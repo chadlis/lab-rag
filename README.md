@@ -43,11 +43,10 @@ uv run pytest tests/ -v
 - [x] Persist index to disk (JSON)
 
 ### 2 — TF-IDF
-- [ ] Build an inverted index
-- [ ] Implement TF-IDF retrieval
-  - [ ] term frequency
-  - [ ] inverse document frequency
-  - [ ] TF-IDF scoring
+- [x] Implement TF-IDF retrieval
+  - [x] term frequency
+  - [x] inverse document frequency
+  - [x] TF-IDF scoring
 
 ### 3 — Keyword Search
 - [ ] Implement BM25 retrieval
