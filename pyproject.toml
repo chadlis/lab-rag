@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "python-dotenv>=1.2.2",
     "nltk==3.9.1",
+    "tqdm>=4.67.3",
 ]
 
 [dependency-groups]

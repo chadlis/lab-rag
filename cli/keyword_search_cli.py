@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 from pathlib import Path
 from collections.abc import Iterable
 
@@ -34,6 +35,10 @@ def main() -> None:
     build_parser.add_argument(
         "--verbose", action="store_true", help="Enable verbose output"
     )
+    
+    tfidf_parser = subparsers.add_parser("tfidf", help="Get tfidf of a term in a document")
+    tfidf_parser.add_argument("document", type=int)
+    tfidf_parser.add_argument("term", type=str)
 
     args = parser.parse_args()
     match args.command:
@@ -44,26 +49,36 @@ def main() -> None:
             inverted_index = InvertedIndex()
             inverted_index.build(data, stopwords)
             inverted_index.save(CACHE_DIR)
-            print(f"Index built successfully")
+            print("Index built successfully")
             if args.verbose:
                 print(f"Saved in {CACHE_DIR}")
         case "search":  # online querying
             print(f"Searching for: {args.query}")
-            try:
-                inverted_index = InvertedIndex.load(CACHE_DIR)
-            except FileNotFoundError as e:
-                print(e)
-                print("Index not found. Run 'build' first!")
-                return
+            inverted_index = load_index()
             stopwords = load_stopwords(ASSETS_DIR / STOPWORDS_FILENAME)
-            query_stems = filter_and_stem(args.query, stopwords)
+            query_stems = set(filter_and_stem(args.query, stopwords))
             doc_ids: set[int] = set()
             for stem in query_stems:
                 doc_ids |= set(inverted_index.get_documents(stem))
             results = (inverted_index.docmap[doc_id] for doc_id in sorted(doc_ids))
             display_results(results, limit=args.limit, verbose=args.verbose)
+        case "tfidf":
+            print(f"Getting tfidf of {args.term} in document {args.document}")
+            inverted_index = load_index()
+            stopwords = load_stopwords(ASSETS_DIR / STOPWORDS_FILENAME)
+            tf_idf = inverted_index.get_tf_idf(args.document, args.term, stopwords)
+            print(f"TF-IDF score of '{args.term}' in document '{args.document}': {tf_idf:.2f}")
         case _:
             parser.print_help()
+
+
+def load_index() -> InvertedIndex:
+    try:
+        return InvertedIndex.load(CACHE_DIR)
+    except FileNotFoundError as e:
+        print(e)
+        print("Index not found. Run 'build' first!")
+        sys.exit(1)
 
 
 def display_results(results: Iterable[dict], limit: int = 5, verbose=False) -> None:
