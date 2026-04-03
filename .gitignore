@@ -11,6 +11,19 @@ wheels/
 
 # Data
 /data
+/cache
 
 # Local config
 .env
+
+# Tests
+.pytest_*
+.coverage
+htmlcov/
+
+# Editor
+.DS_Store
+*.swp
+
+# Linter
+.ruff*
