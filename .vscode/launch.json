@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Search: query movies",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/keyword_search_cli.py",
+            "args": ["search", "action", "--limit", "5", "--verbose"],
+            "cwd": "${workspaceFolder}/cli",
+            "env": {
+                "DATA_DIR": "${workspaceFolder}/data",
+                "CACHE_DIR": "${workspaceFolder}/cache",
+                "ASSETS_DIR": "${workspaceFolder}/assets"
+            }
+        },
+        {
+            "name": "Build: inverted index",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/keyword_search_cli.py",
+            "args": ["build", "--verbose"],
+            "cwd": "${workspaceFolder}/cli",
+            "env": {
+                "DATA_DIR": "${workspaceFolder}/data",
+                "CACHE_DIR": "${workspaceFolder}/cache",
+                "ASSETS_DIR": "${workspaceFolder}/assets"
+            }
+        }
+    ]
+}

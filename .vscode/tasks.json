@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean pycache",
+            "type": "shell",
+            "command": "find . -type d -name __pycache__ -exec rm -rf {} +",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run tests",
+            "type": "shell",
+            "command": "uv run pytest tests/ -v",
+            "problemMatcher": []
+        },
+        {
+            "label": "Lint",
+            "type": "shell",
+            "command": "uv run ruff check .",
+            "problemMatcher": []
+        },
+        {
+            "label": "Format",
+            "type": "shell",
+            "command": "uv run ruff format .",
+            "problemMatcher": []
+        }
+    ]
+}
