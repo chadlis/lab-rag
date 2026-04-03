@@ -4,24 +4,43 @@ Building a RAG pipeline from scratch based on boot.dev roadmap
 ## Dataset
 Movies with id, title, and description.
 [Download the dataset](https://github.com/chadlis/lab-rag/releases/download/v0.1-data/movies.json)
+Place it at `data/movies.json`.
 
-## Run
+## Setup
 ```bash
 uv sync
-uv run python -m lab_rag "a film about space"
+cp .env.example .env  # adjust paths if needed
+```
+
+## Usage
+**Build the search index** (required before searching):
+```bash
+uv run cli/keyword_search_cli.py build --verbose
+```
+
+**Search:**
+```bash
+uv run cli/keyword_search_cli.py search "brave" --limit 10 --verbose
+```
+
+## Run tests
+```bash
+uv run pytest tests/ -v
 ```
 
 
 ## Roadmap
 ### 0 - Setup
-- [ ] Set up the project
+- [x] Set up the project
 
 ### 1 — Basic keyword search
-- [ ] Implement text preprocessing
-  - [ ] punctuation normalization
-  - [ ] tokenization
-  - [ ] stop word removal
-- [ ] implement basic keyword search
+- [x] Implement text preprocessing
+  - [x] punctuation normalization
+  - [x] tokenization
+  - [x] stop word removal
+- [x] Implement basic keyword search
+- [x] Build an inverted index with stemming
+- [x] Persist index to disk (JSON)
 
 ### 2 — TF-IDF
 - [ ] Build an inverted index
