@@ -23,7 +23,7 @@ class InvertedIndex:
     def get_documents(self, term: str) -> list[int]:
         return sorted(self.index.get(term, []))
 
-    def save(self, cache_directory: Path, verbose: bool) -> None:
+    def save(self, cache_directory: Path) -> None:
         cache_directory.mkdir(parents=True, exist_ok=True)
         with open(cache_directory / INDEX_FILENAME, "w") as f:
             # sets are not JSON-serializable, convert to sorted lists
@@ -31,9 +31,6 @@ class InvertedIndex:
         with open(cache_directory / DOCMAP_FILENAME, "w") as f:
             # JSON keys must be strings, int doc_ids become "1", "2", etc.
             json.dump({str(doc_id): movie for doc_id, movie in self.docmap.items()}, f)
-            print("Index built successfully")
-        if verbose:
-            print(f"Saved in {cache_directory}")
 
     @classmethod
     def load(cls, cache_directory: Path) -> "InvertedIndex":

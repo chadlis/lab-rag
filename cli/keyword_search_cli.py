@@ -43,7 +43,10 @@ def main() -> None:
             stopwords = load_stopwords(ASSETS_DIR / STOPWORDS_FILENAME)
             inverted_index = InvertedIndex()
             inverted_index.build(data, stopwords)
-            inverted_index.save(CACHE_DIR, args.verbose)
+            inverted_index.save(CACHE_DIR)
+            print(f"Index built successfully")
+            if args.verbose:
+                print(f"Saved in {CACHE_DIR}")
         case "search":  # online querying
             print(f"Searching for: {args.query}")
             try:
