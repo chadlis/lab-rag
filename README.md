@@ -49,10 +49,10 @@ uv run pytest tests/ -v
   - [x] TF-IDF scoring
 
 ### 3 — Keyword Search
-- [ ] Implement BM25 retrieval
-  - [ ] term frequency saturation
-  - [ ] document length normalization
-  - [ ] BM25 scoring pipeline
+- [x] Implement BM25 retrieval
+  - [x] term frequency saturation
+  - [x] document length normalization
+  - [x] BM25 scoring pipeline
 
 ### 4 — Semantic Search
 - [ ] Implement semantic search with embeddings
