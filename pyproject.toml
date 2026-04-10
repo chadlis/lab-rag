@@ -8,6 +8,7 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "nltk==3.9.1",
     "tqdm>=4.67.3",
+    "sentence-transformers>=5.4.0",
 ]
 
 [dependency-groups]

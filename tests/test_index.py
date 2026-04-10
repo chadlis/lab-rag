@@ -1,6 +1,6 @@
 import pytest
 
-from cli.index import InvertedIndex
+from cli.lib.index import InvertedIndex
 
 
 # ---------------------------------------------------------------------------
