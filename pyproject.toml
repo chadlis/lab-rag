@@ -9,6 +9,7 @@ dependencies = [
     "nltk==3.9.1",
     "tqdm>=4.67.3",
     "sentence-transformers>=5.4.0",
+    "numpy>=2.4.4",
 ]
 
 [dependency-groups]

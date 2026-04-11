@@ -55,17 +55,13 @@ uv run pytest tests/ -v
   - [x] BM25 scoring pipeline
 
 ### 4 — Semantic Search
-- [ ] Implement semantic search with embeddings
-- [ ] Evaluate embedding models and similarity metrics
-  - [ ] model selection
-  - [ ] vector operations
-  - [ ] dot product similarity
-  - [ ] cosine similarity
-- [ ] Generate document and query embeddings
-- [ ] Build the semantic retrieval pipeline
-- [ ] Explore scaling strategies
-  - [ ] locality-sensitive hashing
-  - [ ] vector databases
+- [x] Implement semantic search with embeddings
+- [x] Evaluate embedding models and similarity metrics
+  - [x] model selection
+  - [x] vector operations
+  - [x] cosine similarity
+- [x] Generate document and query embeddings
+- [x] Build the semantic retrieval pipeline
 
 ### 5 — Chunking
 - [ ] Add document chunking for retrieval
