@@ -52,6 +52,19 @@
                 "CACHE_DIR": "${workspaceFolder}/cache",
                 "ASSETS_DIR": "${workspaceFolder}/assets"
             }
-        }
+        },
+        {
+            "name": "Semantic: search funny bear movies",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/semantic_search_cli.py",
+            "args": ["search", "FUNNY bear MOVIES", "--limit", "5"],
+            "cwd": "${workspaceFolder}/cli",
+            "env": {
+                "DATA_DIR": "${workspaceFolder}/data",
+                "CACHE_DIR": "${workspaceFolder}/cache",
+                "ASSETS_DIR": "${workspaceFolder}/assets"
+            }
+        },
     ]
 }
