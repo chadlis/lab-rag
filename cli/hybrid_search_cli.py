@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from google import genai
 
 from lib.hybrid_search import normalize, HybridSearch
 from lib.loader import load_movies, load_stopwords
@@ -27,6 +28,69 @@ ASSETS_DIR = _resolve("ASSETS_DIR", _BASE_DIR / "assets")
 MOVIES_FILENAME = "movies.json"
 STOPWORDS_FILENAME = "stopwords.txt"
 
+_GEMMA_MODEL = "gemma-3-27b-it"
+
+
+def _gemma_generate(prompt: str) -> str:
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY environment variable not set")
+    client = genai.Client(api_key=api_key)
+    response = client.models.generate_content(model=_GEMMA_MODEL, contents=prompt)
+    return response.text.strip()
+
+
+def _spell_correct(query: str) -> str:
+    prompt = f"""Fix any spelling errors in the user-provided movie search query below.
+Correct only clear, high-confidence typos. Do not rewrite, add, remove, or reorder words.
+Preserve punctuation and capitalization unless a change is required for a typo fix.
+If there are no spelling errors, or if you're unsure, output the original query unchanged.
+Output only the final query text, nothing else.
+User query: "{query}"
+"""
+    return _gemma_generate(prompt)
+
+
+def _rewrite_query(query: str) -> str:
+    prompt = f"""Rewrite the user-provided movie search query below to be more specific and searchable.
+
+Consider:
+- Common movie knowledge (famous actors, popular films)
+- Genre conventions (horror = scary, animation = cartoon)
+- Keep the rewritten query concise (under 10 words)
+- It should be a Google-style search query, specific enough to yield relevant results
+- Don't use boolean logic
+
+Examples:
+- "that bear movie where leo gets attacked" -> "The Revenant Leonardo DiCaprio bear attack"
+- "movie about bear in london with marmalade" -> "Paddington London marmalade"
+- "scary movie with bear from few years ago" -> "bear horror movie 2015-2020"
+
+If you cannot improve the query, output the original unchanged.
+Output only the rewritten query text, nothing else.
+
+User query: "{query}"
+"""
+    return _gemma_generate(prompt)
+
+
+def _expand_query(query: str) -> str:
+    prompt = f"""Expand the user-provided movie search query below with related terms.
+
+Add synonyms and related concepts that might appear in movie descriptions.
+Keep expansions relevant and focused.
+Output only the additional terms; they will be appended to the original query.
+
+Examples:
+- "scary bear movie" -> "scary horror grizzly bear movie terrifying film"
+- "action movie with bear" -> "action thriller bear chase fight adventure"
+- "comedy with bear" -> "comedy funny bear humor lighthearted"
+
+User query: "{query}"
+"""
+    expansion = _gemma_generate(prompt)
+    return f"{query} {expansion}"
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Hybrid Search CLI")
@@ -44,6 +108,12 @@ def main() -> None:
     rrf_parser.add_argument("query", type=str, help="search query")
     rrf_parser.add_argument("-k", type=int, default=60, help="RRF k parameter")
     rrf_parser.add_argument("--limit", type=int, default=5, help="number of results to return")
+    rrf_parser.add_argument(
+        "--enhance",
+        type=str,
+        choices=["spell", "rewrite", "expand"],
+        help="Query enhancement method",
+    )
 
     args = parser.parse_args()
 
@@ -67,7 +137,20 @@ def main() -> None:
             movies = load_movies(DATA_DIR / MOVIES_FILENAME)
             stopwords = load_stopwords(ASSETS_DIR / STOPWORDS_FILENAME)
             hybrid = HybridSearch(movies, stopwords, CACHE_DIR)
-            results = hybrid.rrf_search(args.query, args.k, args.limit)
+            query = args.query
+            if args.enhance == "spell":
+                enhanced_query = _spell_correct(query)
+                print(f"Enhanced query (spell): '{query}' -> '{enhanced_query}'\n")
+                query = enhanced_query
+            elif args.enhance == "rewrite":
+                enhanced_query = _rewrite_query(query)
+                print(f"Enhanced query (rewrite): '{query}' -> '{enhanced_query}'\n")
+                query = enhanced_query
+            elif args.enhance == "expand":
+                enhanced_query = _expand_query(query)
+                print(f"Enhanced query (expand): '{query}' -> '{enhanced_query}'\n")
+                query = enhanced_query
+            results = hybrid.rrf_search(query, args.k, args.limit)
             for i, result in enumerate(results, start=1):
                 bm25_rank = result['bm25_rank'] if result['bm25_rank'] is not None else 'N/A'
                 sem_rank = result['semantic_rank'] if result['semantic_rank'] is not None else 'N/A'

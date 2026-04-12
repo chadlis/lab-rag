@@ -78,12 +78,11 @@ uv run pytest tests/ -v
 - [x] Implement Reciprocal Rank Fusion (RRF)
 
 ### 7 — LLMs
-- [ ] Integrate an LLM into the RAG pipeline
-- [ ] Set up the Gemini API
-- [ ] Improve queries with LLM assistance
-  - [ ] spell correction
-  - [ ] query rewriting
-  - [ ] query expansion
+- [x] Integrate an LLM into the RAG pipeline
+- [x] Improve queries with LLM assistance
+  - [x] spell correction
+  - [x] query rewriting
+  - [x] query expansion
 
 ### 8 — Reranking
 - [ ] Add a reranking layer
