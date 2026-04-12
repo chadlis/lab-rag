@@ -66,5 +66,18 @@
                 "ASSETS_DIR": "${workspaceFolder}/assets"
             }
         },
+        {
+            "name": "Hybrid RRF: family fighting movie",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cli/hybrid_search_cli.py",
+            "args": ["rrf-search", "family fighting movie", "--limit", "5"],
+            "cwd": "${workspaceFolder}/cli",
+            "env": {
+                "DATA_DIR": "${workspaceFolder}/data",
+                "CACHE_DIR": "${workspaceFolder}/cache",
+                "ASSETS_DIR": "${workspaceFolder}/assets"
+            }
+        },
     ]
 }
