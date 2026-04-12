@@ -64,14 +64,11 @@ uv run pytest tests/ -v
 - [x] Build the semantic retrieval pipeline
 
 ### 5 — Chunking
-- [ ] Add document chunking for retrieval
-- [ ] Support chunk overlap
-- [ ] Experiment with semantic chunking
-- [ ] Implement chunk-level embedding search
-- [ ] Handle chunking edge cases
-- [ ] Explore advanced retrieval ideas
-  - [ ] ColBERT
-  - [ ] late chunking
+- [x] Add document chunking for retrieval
+- [x] Support chunk overlap
+- [x] Experiment with semantic chunking
+- [x] Implement chunk-level embedding search
+- [x] Handle chunking edge cases
 
 ### 6 — Hybrid Search
 - [ ] Compare keyword and semantic retrieval

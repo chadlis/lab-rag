@@ -7,14 +7,22 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from lib.loader import load_movies
-from lib.semantic_search import embed_text, SemanticSearch
+from lib.semantic_search import embed_text, SemanticSearch, ChunkedSemanticSearch, chunk_text, semantic_chunk_text
 
 load_dotenv()
 
 _BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = Path(os.getenv("DATA_DIR", _BASE_DIR / "data"))
-CACHE_DIR = Path(os.getenv("CACHE_DIR", _BASE_DIR / "cache"))
-ASSETS_DIR = Path(os.getenv("ASSETS_DIR", _BASE_DIR / "assets"))
+
+def _resolve(env_var: str, default: Path) -> Path:
+    val = os.getenv(env_var)
+    if not val:
+        return default
+    p = Path(val)
+    return p if p.is_absolute() else _BASE_DIR / p
+
+DATA_DIR = _resolve("DATA_DIR", _BASE_DIR / "data")
+CACHE_DIR = _resolve("CACHE_DIR", _BASE_DIR / "cache")
+ASSETS_DIR = _resolve("ASSETS_DIR", _BASE_DIR / "assets")
 
 MOVIES_FILENAME = "movies.json"
 def main():
@@ -30,6 +38,18 @@ def main():
     search_parser = subparsers.add_parser("search", help="Search movies by semantic similarity")
     search_parser.add_argument("query", type=str, help="the search query")
     search_parser.add_argument("--limit", type=int, default=5, help="number of results to return")
+    chunk_parser = subparsers.add_parser("chunk")
+    chunk_parser.add_argument("text", type=str)
+    chunk_parser.add_argument("--chunk-size", type=int, default=200)
+    chunk_parser.add_argument("--overlap", type=int, default=40)
+    subparsers.add_parser("embed_chunks", help="Build or load chunked embeddings")
+    search_chunked_parser = subparsers.add_parser("search_chunked", help="Search movies using chunked embeddings")
+    search_chunked_parser.add_argument("query", type=str, help="the search query")
+    search_chunked_parser.add_argument("--limit", type=int, default=5, help="number of results to return")
+    semantic_chunk_parser = subparsers.add_parser("semantic_chunk")
+    semantic_chunk_parser.add_argument("text", type=str)
+    semantic_chunk_parser.add_argument("--max-chunk-size", type=int, default=4)
+    semantic_chunk_parser.add_argument("--overlap", type=int, default=0)
     args = parser.parse_args()
 
     match args.command:
@@ -59,6 +79,29 @@ def main():
                 print(f"{i}. {result['title']} (score: {result['score']:.4f})")
                 print(f"  {result['description']}")
                 print()
+        case "chunk":
+            print(f"Chunking {len(args.text)} characters")
+            chunks = chunk_text(args.text, args.chunk_size, args.overlap)
+            for i, chunk in enumerate(chunks):
+                print(f"{i+1}. {chunk}")
+        case "semantic_chunk":
+            print(f"Semantically chunking {len(args.text)} characters")
+            chunks = semantic_chunk_text(args.text, args.max_chunk_size, args.overlap)
+            for chunk in chunks:
+                print(chunk)
+        case "embed_chunks":
+            movies = load_movies(DATA_DIR / MOVIES_FILENAME)
+            chunked_search = ChunkedSemanticSearch()
+            embeddings = chunked_search.load_or_create_chunk_embeddings(movies, CACHE_DIR)
+            print(f"Generated {len(embeddings)} chunked embeddings")
+        case "search_chunked":
+            movies = load_movies(DATA_DIR / MOVIES_FILENAME)
+            chunked_search = ChunkedSemanticSearch()
+            chunked_search.load_or_create_chunk_embeddings(movies, CACHE_DIR)
+            results = chunked_search.search_chunks(args.query, args.limit)
+            for i, result in enumerate(results, start=1):
+                print(f"\n{i}. {result['title']} (score: {result['score']:.4f})")
+                print(f"   {result['document']}...")
         case _:
             parser.print_help()
 
