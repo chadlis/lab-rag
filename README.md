@@ -71,11 +71,11 @@ uv run pytest tests/ -v
 - [x] Handle chunking edge cases
 
 ### 6 — Hybrid Search
-- [ ] Compare keyword and semantic retrieval
-- [ ] Implement hybrid search
-- [ ] Add score normalization
-- [ ] Add weighted score fusion
-- [ ] Implement Reciprocal Rank Fusion (RRF)
+- [x] Compare keyword and semantic retrieval
+- [x] Implement hybrid search
+- [x] Add score normalization
+- [x] Add weighted score fusion
+- [x] Implement Reciprocal Rank Fusion (RRF)
 
 ### 7 — LLMs
 - [ ] Integrate an LLM into the RAG pipeline

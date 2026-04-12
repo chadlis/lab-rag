@@ -87,8 +87,8 @@ def main():
         case "semantic_chunk":
             print(f"Semantically chunking {len(args.text)} characters")
             chunks = semantic_chunk_text(args.text, args.max_chunk_size, args.overlap)
-            for chunk in chunks:
-                print(chunk)
+            for i, chunk in enumerate(chunks):
+                print(f"{i+1}. {chunk}")
         case "embed_chunks":
             movies = load_movies(DATA_DIR / MOVIES_FILENAME)
             chunked_search = ChunkedSemanticSearch()

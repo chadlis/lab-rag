@@ -34,6 +34,9 @@ def chunk_text(text: str, chunk_size: int=200, overlap: int=40)-> list[str]:
     return chunks
 
 def semantic_chunk_text(text: str, max_chunk_size: int = 4, overlap : int = 0) -> list[str]:
+    text = text.strip()
+    if not text:
+        return []
     regex = r"(?<=[.!?])\s+"
     sentences = re.split(regex, text)
     chunks = []
